@@ -62,7 +62,7 @@ sub FileType {
     open(FP, "<$file");
     $len = read(FP, $buffer, 16384, 0);
     $type = "unknown";
-    if (unpack("h4", $buffer) eq '7f20') {
+    if (unpack("h4", $buffer) eq '7f20' || unpack("h4", $buffer) eq '02f7') {
         $type = 'DVI';
     }
     elsif (unpack("a4", $buffer) eq '%PDF') {
@@ -70,6 +70,12 @@ sub FileType {
     }
     elsif (unpack("a2", $buffer) eq '%!') {
         $type = 'Postscript';
+    }
+    elsif (unpack("h4", $buffer) eq 'f1b8' || unpack("h4", $buffer) eq '8b1f') {
+        $type = 'GZIP';
+    }
+    elsif (unpack("h4", $buffer) eq '9d1f' || unpack("h4", $buffer) eq 'f1d9') {
+        $type = 'COMPRESS';
     }
     elsif ($type eq 'unknown') {
         seek(FP, 0, 0);

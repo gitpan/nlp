@@ -62,7 +62,15 @@ sub print {
 
 sub printFile {
     local(*option, $file) = @_;
-    local($tmpfile, $tmpfile2);
+    local($tmpfile, $tmpfile2, $tmpfile3);
+
+    #   try to uncompress it
+    $filetype = &File::FileType($file);
+    if ($filetype eq 'GZIP' || $filetype eq 'COMPRESS') {
+        $tmpfile3 = &File::Tmpfile();
+        &Util::System("$Config::PRG_GUNZIP <$file >$tmpfile3");
+        $file = $tmpfile3;
+    }
 
     #   strip printer mode commands
     if ($option{'removeheader'} eq 'true') {
@@ -116,6 +124,7 @@ sub printFile {
 
     unlink($tmpfile) if (-f $tmpfile);
     unlink($tmpfile2) if (-f $tmpfile2);
+    unlink($tmpfile3) if (-f $tmpfile3);
 }
 
 sub printASCII {
@@ -155,7 +164,7 @@ sub printASCII {
 
 sub printDVI {
     local(*option, $file) = @_;
-	local($tmpfile, $tmpfile2, $dvipsopt, $start);
+    local($tmpfile, $tmpfile2, $dvipsopt, $start);
 
     &Util::Dbg("filter: DVI");
 
@@ -184,7 +193,7 @@ sub printDVI {
 
 sub printPDF {
     local(*option, $file) = @_;
-	local($tmpfile, $pdftopsopt);
+    local($tmpfile, $pdftopsopt);
 
     &Util::Dbg("filter: PDF");
 

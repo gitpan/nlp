@@ -6,7 +6,7 @@
                    
   NLP -- New LP, a frontend for PostScript printers                
 
-  Version 3.0.0 (26-02-1997)
+  Version 3.0.2 (26-02-1997)
 
   NLP is a frontend to PostScript printers which can be controlled by the
   lpr/lp Unix commands. It recognizes ASCII, DVI, PDF and PostScript as the

@@ -1,5 +1,9 @@
 
   3.0.0 970226 o cleaned up the sources
                o added -r option to remove print mode commands
-			   o added -f option to apply external filters
+               o added -f option to apply external filters
+
+  3.0.1 970226 o added support for PDF
+
+  3.0.2 970316 o added support gzip'ed and compress'ed files
 

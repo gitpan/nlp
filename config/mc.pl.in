@@ -8,6 +8,7 @@ $PRG_PSTOPS    = "@path_pstops@";
 $PRG_DVIPS     = "@path_dvips@";
 $PRG_PDFTOPS   = "@path_pdftops@";
 $PRG_GHOSTVIEW = "@path_ghostview@";
+$PRG_GUNZIP    = "@path_gunzip@";
 
 1;
 

@@ -45,14 +45,14 @@ all:
 dist: distclean
 	@$(_GETDISTINFO) \
 	_distname="nlp-$${_version}"; \
-	_tarball="../arc/$${_distname}.tar.gz"; \
+	_tarball="../web/distrib/$${_distname}.tar.gz"; \
 	echo "Release Distribution: NLP Version $$_version"; \
 	$(_BUILDDIST)
 
 snap: distclean
 	@$(_GETDISTINFO) \
 	_distname="nlp-$${_version}-$${_date}-SNAP"; \
-	_tarball="../arc/$${_distname}.tar.gz"; \
+	_tarball="../web/distrib/$${_distname}.tar.gz"; \
 	echo "Snap of whole source tree: NLP Version $$_version as of $$_date"; \
 	$(_BUILDDIST)
 

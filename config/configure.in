@@ -117,6 +117,10 @@ AC_PROGRAMS_PATH(path_ghostview, gv ghostview, ghostview_not_found,)
 if test "$path_ghostview" != "ghostview_not_found"; then
     AC_DEFINE(HAVE_GHOSTVIEW)
 fi
+AC_PROGRAMS_PATH(path_gunzip, gunzip, gunzip_not_found,)
+if test "$path_gunzip" != "gunzip_not_found"; then
+    AC_DEFINE(HAVE_GUNZIP)
+fi
 
 AC_PROG_INSTALL
 

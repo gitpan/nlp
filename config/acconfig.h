@@ -6,6 +6,7 @@
 #undef HAVE_DVIPS
 #undef HAVE_GHOSTVIEW
 #undef HAVE_PDFTOPS
+#undef HAVE_GUNZIP
 
 @BOTTOM@
 
