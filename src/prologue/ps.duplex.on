@@ -1,0 +1,3 @@
+statusdict begin
+true true true setduplexmode def
+end

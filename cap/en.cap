@@ -1,0 +1,14 @@
+##
+##  printer.cap -- nlp printer capability database
+##                 for Engelschall Private Headquarter
+##
+
+hplj5mp:\
+    :type=HP Laserjet 5MP:\
+    :mode=Laser:\
+	:dpi=600:\
+	:duplex=no:\
+    :spoolhost=direct:\
+    :location=Engelschall:
+
+##EOF##

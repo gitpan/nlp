@@ -1,0 +1,107 @@
+##
+##  src/Makefile -- SMake/SMkMf source makefile
+##  Copyright (c) 1994 Ralf S. ENgelschall, <rse@en.muc.de>
+##
+
+@SET_MAKE@
+SHELL           = /bin/sh
+
+top_srcdir      = @top_srcdir@
+srcdir          = @srcdir@
+VPATH           = @srcdir@
+
+INSTALL         = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA    = @INSTALL_DATA@
+
+prefix          = @prefix@
+exec_prefix     = @exec_prefix@
+bindir          = @bindir@
+libdir          = @libdir@
+man1dir         = @man1dir@
+man1ext         = @man1ext@
+tmpdir          = @tmpdir@
+
+path_perl=@path_perl@
+
+GEN_BIN_SRC=\
+	rm -f $@; \
+	$(top_srcdir)/etc/unrequire $@.pl | \
+	sed -e "s|\@path_perl\@|$(path_perl)|g" >$@; \
+	chmod a+x $@
+
+GEN_MAN_SRC=\
+	date=`date '+%y/%m/%d'`; \
+	version=`$(path_perl) -e 'require "./libVers.pl"; print $$Vers::NLP_Version; '`; \
+	cat $> | \
+	sed -e "s|\@date\@|$$date|g" \
+		-e "s|\@version\@|$$version|g" \
+		-e "s|\@libdir\@|$(libdir)|g"
+
+all: nlp nlp.man.nroff
+
+nlp: nlp.pl        \
+     modMain.pl    \
+	 modPrint.pl   \
+	 modQueue.pl   \
+	 libGetopts.pl \
+	 libFile.pl    \
+	 libTerm.pl    \
+	 libTime.pl    \
+	 libVers.pl
+	$(GEN_BIN_SRC)
+
+nlp.man: nlp.man.nroff \
+         nlp.man.iso8  \
+         nlp.man.asc7  \
+    	 nlp.man.dvi   \
+    	 nlp.man.ps    \
+    	 nlp.man.html  \
+    	 nlp.man.pod   \
+    	 nlp.man.rtf 
+
+nlp.man.nroff: nlp.man.in
+	$(GEN_MAN_SRC) | cat >nlp.man.nroff
+nlp.man.iso8: nlp.man.nroff
+	groff -Tascii -man nlp.man.nroff >nlp.man.iso8
+nlp.man.asc7: nlp.man.nroff
+	groff -Tascii -man nlp.man.nroff | col -b >nlp.man.asc7
+nlp.man.dvi: nlp.man.nroff
+	groff -Tdvi -man nlp.man.nroff >nlp.man.dvi
+nlp.man.ps: nlp.man.nroff
+	groff -Tps -man nlp.man.nroff >nlp.man.ps
+nlp.man.html: nlp.man.nroff
+	groff -Tascii -man nlp.man.nroff | rman -f html >nlp.man.html
+nlp.man.pod: nlp.man.nroff
+	groff -Tascii -man nlp.man.nroff | rman -f pod >nlp.man.pod
+nlp.man.rtf: nlp.man.nroff
+	groff -Tascii -man nlp.man.nroff | rman -f rtf >nlp.man.rtf
+
+install:
+	$(top_srcdir)/etc/mkinstalldirs $(bindir)
+	$(top_srcdir)/etc/mkinstalldirs $(man1dir)
+	$(top_srcdir)/etc/mkinstalldirs $(libdir)/prologue
+	$(INSTALL_PROGRAM) nlp $(bindir)/nlp
+	$(INSTALL_DATA) nlp.man.nroff $(man1dir)/nlp.1
+	$(INSTALL_DATA) prologue/ps.duplex.on       $(libdir)/prologue/ps.duplex.on
+	$(INSTALL_DATA) prologue/ps.duplex.off      $(libdir)/prologue/ps.duplex.off
+	$(INSTALL_DATA) prologue/ps.papertray.upper $(libdir)/prologue/ps.papertray.upper
+	$(INSTALL_DATA) prologue/ps.papertray.lower $(libdir)/prologue/ps.papertray.lower
+	$(INSTALL_DATA) prologue/ps.manualfeed.on   $(libdir)/prologue/ps.manualfeed.on
+	$(INSTALL_DATA) prologue/ps.manualfeed.off  $(libdir)/prologue/ps.manualfeed.off
+
+version:
+	$(top_srcdir)/etc/newvers -l perl -p 'NLP' libVers.pl
+
+realclean:
+	rm -f nlp
+	rm -f nlp.man.nroff nlp.man.iso8 nlp.man.dvi nlp.man.ps nlp.man.html nlp.man.asc7 nlp.man.pod nlp.man.rtf
+
+clean:
+	rm -f nlp nlp.man.nroff
+
+distclean:
+	rm -f nlp nlp.man.nroff
+	rm -f Makefile
+
+

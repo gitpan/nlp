@@ -1,0 +1,141 @@
+dnl
+dnl Process this file with autoconf to produce a configure script.
+dnl
+
+AC_PREREQ(2.0)dnl
+AC_REVISION($Revision: 1.1$)dnl
+
+AC_INIT(INSTALL)
+AC_CONFIG_HEADER(config/ac.h)dnl
+AC_CONFIG_AUX_DIR(etc)
+AC_PREFIX_DEFAULT(/usr/local)
+
+AC_FIX_DIST_TREE
+
+AC_CONFIG_PARAMS
+AC_CANONICAL_SYSTEM
+AC_SUPPORTED_CANONICAL_SYSTEM
+
+AC_UVAR_INIT
+AC_UVAR_VERB([dnl
+#   Imported pathes of the GNU ``configure'' command line:
+#            --srcdir=<srcdir>
+#            --prefix=<prefix>
+#       --exec-prefix=<exec_prefix>
+#   These are used in the above definitions.
+#
+])dnl
+AC_UVAR_SETQUOTE(srcdir, $srcdir)
+AC_UVAR_SETCHKQUOTE(prefix, $prefix)
+AC_UVAR_SETCHKQUOTE(exec_prefix, $prefix)
+AC_UVAR_VERB([dnl
+
+#   Actual installation pathes, Part I [NO EDIT NECESSARY]
+#
+#   Given default values are the exact pathes as recommended
+#   by Richard Stallman in his paper ``GNU Coding Standards'',
+#   as of 28 March 1994.
+#
+#   If these GNU installation pathes do not fit your
+#   individual needs, feel free to edit the given values!!
+#   But remember: than your Push installation is no longer
+#                 compliant to the GNU standards.
+#
+])dnl
+AC_UVAR_SET(bindir,        $exec_prefix/bin)
+AC_UVAR_SET(libdir,        $exec_prefix/lib)
+AC_UVAR_SET(datadir,       $prefix/lib)
+AC_UVAR_SET(statdir,       $prefix/lib)
+AC_UVAR_SET(includedir,    $prefix/include)
+AC_UVAR_SET(oldincludedir, /usr/include)
+AC_UVAR_SET(mandir,        $prefix/man/man1)
+AC_UVAR_SET(man1dir,       $prefix/man/man1)
+AC_UVAR_SET(man2dir,       $prefix/man/man1)
+AC_UVAR_SET(man3dir,       $prefix/man/man1)
+AC_UVAR_SET(man4dir,       $prefix/man/man1)
+AC_UVAR_SET(man5dir,       $prefix/man/man1)
+AC_UVAR_SET(man6dir,       $prefix/man/man1)
+AC_UVAR_SET(man7dir,       $prefix/man/man1)
+AC_UVAR_SET(man8dir,       $prefix/man/man1)
+AC_UVAR_SET(manext,        .1)
+AC_UVAR_SET(man1ext,       .1)
+AC_UVAR_SET(man2ext,       .2)
+AC_UVAR_SET(man3ext,       .3)
+AC_UVAR_SET(man4ext,       .4)
+AC_UVAR_SET(man5ext,       .5)
+AC_UVAR_SET(man6ext,       .6)
+AC_UVAR_SET(man7ext,       .7)
+AC_UVAR_SET(man8ext,       .8)
+AC_UVAR_VERB([dnl
+
+#   Actual installation pathes, Part II [NO EDIT NECESSARY]
+#
+#   The following pathes are GenOpt pathes and
+#   are additionally used by the Push installation.
+#
+#   These are not predefined by the GNU standard but
+#   used by the author for a long time.
+#
+])dnl
+AC_UVAR_SET(pkgdir,        $prefix)
+AC_UVAR_SET(infodir,       $prefix/info)
+AC_UVAR_SET(xaddir,        $prefix/xad)
+AC_UVAR_SET(tmpdir,        /tmp)
+AC_UVAR_OUTPUT
+
+AC_SET_MAKE
+
+AC_PROGRAMS_PATH(path_a2ps, a2ps, a2ps_not_found,)
+if test "$path_a2ps" = "a2ps_not_found"; then
+    AC_ERROR([required program ``a2ps'' not found])
+fi
+AC_PROGRAMS_PATH(path_psselect, psselect, psselect_not_found,)
+if test "$path_psselect" = "psselect_not_found"; then
+    AC_ERROR([required program ``psselect'' not found])
+fi
+AC_PROGRAMS_PATH(path_psbook, psbook, psbook_not_found,)
+if test "$path_psbook" = "psbook_not_found"; then
+    AC_ERROR([required program ``psbook'' not found])
+fi
+AC_PROGRAMS_PATH(path_pstops, pstops, pstops_not_found,)
+if test "$path_pstops" = "pstops_not_found"; then
+    AC_ERROR([required program ``pstops'' not found])
+fi
+AC_PROGRAMS_PATH(path_perl, perl5 perl, perl_not_found,)
+if test "$path_perl" = "perl_not_found"; then
+    AC_ERROR([required program ``perl'' not found])
+fi
+AC_PROGRAMS_PATH(path_dvips, dvips, dvips_not_found,)
+if test "$path_dvips" != "dvips_not_found"; then
+    AC_DEFINE(HAVE_DVIPS)
+fi
+AC_PROGRAMS_PATH(path_ghostview, gv ghostview, ghostview_not_found,)
+if test "$path_ghostview" != "ghostview_not_found"; then
+    AC_DEFINE(HAVE_GHOSTVIEW)
+fi
+
+AC_PROG_INSTALL
+
+case $host_os in
+    solaris* ) AC_DEFINE(USE_SYSV_LP) ;;
+	hpux*    ) AC_DEFINE(USE_SYSV_LP) ;;
+    sunos*   ) AC_DEFINE(USE_BSD_LPR) ;;
+	freebsd* ) AC_DEFINE(USE_BSD_LPR) ;;
+esac
+
+AC_OUTPUT(dnl
+Makefile dnl
+src/Makefile dnl
+test/Makefile dnl
+etc/crunch dnl
+etc/unrequire dnl
+config/ach2acpl dnl
+config/sc.pl dnl
+config/mc.pl dnl
+,dnl
+chmod a+x etc/crunch
+chmod a+x etc/unrequire
+chmod a+x config/ach2acpl
+./config/ach2acpl
+)dnl
+

@@ -1,0 +1,57 @@
+
+package Config;
+
+#
+#   the STATIC configuration
+#   (automatically determined by GNU autoconf)
+#
+
+            $host="@host@";
+        $host_cpu="@host_cpu@";
+     $host_vendor="@host_vendor@";
+         $host_os="@host_os@";
+
+          $target="@target@";
+      $target_cpu="@target_cpu@";
+   $target_vendor="@target_vendor@";
+       $target_os="@target_os@";
+
+           $build="@build@";
+       $build_cpu="@build_cpu@";
+    $build_vendor="@build_vendor@";
+        $build_os="@build_os@";
+
+          $prefix="@prefix@";
+     $exec_prefix="@exec_prefix@";
+
+          $pkgdir="@pkgdir@";
+          $bindir="@bindir@";
+          $libdir="@libdir@";
+         $datadir="@datadir@";
+         $statdir="@statdir@";
+      $includedir="@includedir@";
+   $oldincludedir="@oldincludedir@";
+          $mandir="@mandir@";
+         $man1dir="@man1dir@";
+         $man2dir="@man2dir@";
+         $man3dir="@man3dir@";
+         $man4dir="@man4dir@";
+         $man5dir="@man5dir@";
+         $man6dir="@man6dir@";
+         $man7dir="@man7dir@";
+         $man8dir="@man8dir@";
+          $manext="@manext@";
+         $man1ext="@man1ext@";
+         $man2ext="@man2ext@";
+         $man3ext="@man3ext@";
+         $man4ext="@man4ext@";
+         $man5ext="@man5ext@";
+         $man6ext="@man6ext@";
+         $man7ext="@man7ext@";
+         $man8ext="@man8ext@";
+         $infodir="@infodir@";
+          $xaddir="@xaddir@";
+          $tmpdir="@tmpdir@";
+
+1;
+

@@ -1,0 +1,7 @@
+
+ 1. $ ./configure --prefix=/path/to/nlp/install/dir
+
+ 2. $ make 
+
+ 3. $ make install
+

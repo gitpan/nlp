@@ -1,0 +1,17 @@
+#!@path_perl@
+
+unlink("config/ac.pl");
+open(ACH, "<config/ac.h");
+open(ACPL, ">config/ac.pl");
+print ACPL "package Config;\n";
+print ACPL "# config/ac.pl.  Genereated automatically by ach2acpl from ac.h\n";
+while (<ACH>) {
+    s|^/\*[ \t]*#undef[ \t]+([^ \t]+)[ \t]*\*/.*\n$|\$$1 = 0;\n|;
+    s|^#define[ \t]+([^ \t]+)[ \t]+1.*\n$|\$$1 = 1;\n|;
+    s|^/\*(.*)\*/|#$1|;
+    print ACPL $_;
+}
+print ACPL "\n";
+print ACPL "1;\n";
+close(ACPL);
+close(ACH);

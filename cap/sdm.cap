@@ -1,0 +1,22 @@
+##
+##  printer.cap -- nlp printer capability database
+##                 for sd&m, sun-workstation-cluster
+##
+
+psrz:\
+    :type=HP Laserjet IIISi:\
+    :mode=Laser:\
+	:dpi=300:\
+	:duplex=yes:\
+    :spoolhost=sunbi1(indirect):\
+    :location=Druckerraum, 5. Stock:
+
+pspc:\
+    :type=HP Laserjet IV:\
+    :mode=Laser:\
+	:dpi=600:\
+	:duplex=yes:\
+    :spoolhost=sunbi1(indirect):\
+    :location=Teekueche, 5. Stock:
+
+##EOF##

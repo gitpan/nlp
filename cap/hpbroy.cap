@@ -1,0 +1,54 @@
+##
+##  printer.cap -- nlp printer capability database
+##                 for TUM, Lehrstuhl Broy, hpbroy-workstation-cluster
+##
+
+ps:\
+    :type=NEC Silentwriter LC890:\
+    :mode=Tintenstrahl:\
+	:dpi=300:\
+	:duplex=no:\
+    :spoolhost=hpbroy3(direct):\
+    :location=S2221, 8491, Praktikumsraum:
+
+efekt|defekt:\
+    :type=HP Laserjet IV:\
+    :mode=Laser:\
+	:dpi=600:\
+	:duplex=no:\
+    :spoolhost=hpbroy8(direct):\
+    :location=G0106, 5354, Allgemeiner Rechnerraum Gabelsbergerstr. 39:
+
+eluxe|deluxe:\
+    :type=HP Laserjet IV:\
+    :mode=Laser:\
+	:dpi=600:\
+	:duplex=yes:\
+    :spoolhost=hpbroy13(indirect):\
+    :location=S2221, 8491, Praktikumsraum:
+
+acapo|dacapo:\
+    :type=HP Laserjet IV:\
+    :mode=Laser:\
+	:dpi=300:\
+	:duplex=yes:\
+    :spoolhost=sunbroy16(indirect):\
+    :location=-3209, 2094, Franz Huber:
+
+rima|prima|Prima:\
+    :type=HP Laserjet IV Si:\
+    :mode=Laser:\
+	:dpi=600:\
+	:duplex=yes:\
+    :spoolhost=sunbroy51(indirect):\
+    :location=S3237, -, Allgemeiner Rechnerraum:
+
+pw|pinwriter:\
+    :type=NEC Pinwriter P7:\
+    :mode=Matrix:\
+	:dpi=300:\
+	:duplex=no:\
+    :spoolhost=hpbroy3(direct):\
+    :location=S2221, 8491, Praktikumsraum:
+
+##EOF##

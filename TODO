@@ -1,0 +1,32 @@
+
+
+- Das Windows Header und Footer Zuegs entfernen
+- Automatisch PDF erkenne und mit pdftops konvertieren
+- .gz und .Z erkennen und automatiusch gunzip bzw. uncompress
+- GIF und JPEg etc. durcken via netpbmtools oder imagemagick convert
+
+---
+
+
+Fix:
+    - check of supported manualfeed and papertray
+    - bei optionen mit nummern als args checken ob wirklich arg :-(
+
+Komisch
+    - txt -2 ergibt 1
+                    2
+      ps  -2 ergibt 12
+
+Enhance:
+    - Durchreichen von lpr, dvips und a2ps options
+    - Unter sysV echten lpr ersatz
+    - Bei DVI files dvips vom Dir aufrufen, indem File ist und
+      nicht vom zufaelligen CWD des NLP-Aufrufs, damit Postscript-Files
+      vom dvips gefunden werden koennen.
+    - Notify real
+    - lprm btzw, cancel unterstuetzen
+    - cancel mittels curses based
+    - banner page mit "username, realname, hostname, printer, date"
+    - input: nicht nur file, stdin, sondern auch screen (hardcopy grey, color)
+
+

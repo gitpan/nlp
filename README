@@ -1,0 +1,25 @@
+   _   _ _     ____  
+  | \ | | |   |  _ \ 
+  |  \| | |   | |_) |
+  | |\  | |___|  __/ 
+  |_| \_|_____|_|    
+                   
+  NLP -- New LP, a frontend for PostScript printers                
+
+  Version 3.0.0 (26-02-1997)
+
+  NLP is a frontend to PostScript printers which can be controlled by the
+  lpr/lp Unix commands. It recognizes ASCII, DVI, PDF and PostScript as the
+  input file format and always generates pure PostScript as the output file
+  format. The highlights of NLP are its additive manipulation options which
+  can be applied for each input file. They control how the input format is
+  converted to PostScript.
+
+  The documentation and latest release can be found on
+  http://www.engelschall.com/sw/nlp/
+
+  Copyright (c) 1992-1997 Ralf S. Engelschall, All rights reserved.
+
+  Look at the file LICENSE for detailed license 
+  information about this product.
+

@@ -1,0 +1,259 @@
+%!PS-Adobe-2.0
+%%Creator: RZ Uni Zurich, Switzerland
+%%Title: ISOLatin1.ps 
+%%CreationDate: 10.12.92
+%%DocumentFonts: Courier Courier-Bold Helvetica Helvetica-Bold
+%%EndComments
+%
+% This PostScript code simulates the behavior of an IBM standard
+% line printer. It supports the ASA carriage control characters,
+% some of the machine CC characters and the ISO Latin character set.
+% Additionally different format and positioning are user selectable
+% as well as line spacing and font size. 
+%
+% By setting the parameters of the user section below you can customize
+% your own line printer emulator, simply copy this code in front of your
+% listing and send the whole to your PostScript printer with PRINTDOC
+% (the 2 chars %! in front of the file define your file as a native
+% PostScript file to PRINTDOC, don't remove them).   
+ 
+% !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+% !! Don't touch the lines of code from here to the user section,!!
+% !! unless you are a native PostScript expert.                  !!
+% !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
+/bdef { bind def } def
+/even {/printall false def /printodd false def} bdef   % options def.
+/odd  {/printall false def /printodd true  def} bdef
+/CC {/withcc true def} bdef
+/lm {currentfile token {/x0 exch def}if } bdef
+/tm {currentfile token {/y0 exch def}if } bdef
+/bm {currentfile token {/y1 exch def}if } bdef
+/ps {currentfile token {/ips exch def}if } bdef
+/il {currentfile token {/iil exch def /inl 0 def}if } bdef
+/nl {currentfile token {/inl exch def /iil 0 def}if } bdef
+/A4H {/A4Qopt false def /x0 100 def /y0 750 def /y1 38 def
+      /ips 9 def} bdef
+/A4Q {/A4Qopt true  def /x0 55  def /y0 540 def /y1 17 def
+      /ips 7 def } bdef
+/Helvetica {/fontname (Helvetica) def} bdef
+/bold {/ibold (-Bold) def} bdef
+% options almost case insensitive
+/EVEN {even} bdef /ODD {odd} bdef
+/a4h {A4H} bdef /a4q {A4Q} bdef /cc {CC} bdef
+ 
+/reencdict 24 dict def
+/ReEncode {                            % define character set (ISO Latin 1)
+  reencdict begin
+    /newcodesandnames exch def
+    /newfontname exch def
+    /basefontname exch def
+    /basefontdict basefontname findfont def
+    /newfont basefontdict maxlength dict def
+    basefontdict
+    { exch dup /FID ne
+      { dup /Encoding eq
+        { exch dup length array copy newfont 3 1 roll put }
+        { exch newfont 3 1 roll put } ifelse
+        }
+      { pop pop } ifelse
+      } forall
+    newfont /FontName newfontname put
+    newcodesandnames aload pop
+    newcodesandnames length 2 idiv
+    { newfont /Encoding get 3 1 roll put } repeat
+    newfontname newfont definefont pop
+    end
+  } def
+/RZUvec [
+  226 /acircumflex
+  228 /adieresis
+  224 /agrave
+  233 /eacute
+  234 /ecircumflex
+  235 /edieresis
+  232 /egrave
+  238 /icircumflex
+  239 /idieresis
+  236 /igrave
+  244 /ocircumflex
+  246 /odieresis
+  242 /ograve
+  251 /ucircumflex
+  252 /udieresis
+  249 /ugrave
+  231 /ccedilla
+  196 /Adieresis
+  214 /Odieresis
+  220 /Udieresis
+  223 /germandbls
+  ] def
+/strcat {
+   exch 2 copy length exch length exch dup 5 1 roll
+   add string dup 3 1 roll copy pop dup 4 2 roll putinterval
+   } bdef
+ 
+% define printer emulation procedure
+/startprint {
+  /toprint printodd printall or def      % initialize
+  /fontname fontname ibold strcat def    % prepare text font
+  fontname /RZUfont RZUvec ReEncode
+  /textfont
+    /RZUfont findfont ips scalefont def
+  /psplus ips .03  mul def               % calculate overprint incr.
+  iil 0 eq {                             % calculate interline spacing
+    /iil
+    inl 0 eq
+      {ips ips .1 mul add }              % defaults to 110% fontsize
+      {y0 y1 sub inl div }
+      ifelse
+    def
+    } if
+% define outpage ...
+  pagenr 0 gt {                          % numbering on
+    /titlefont /Courier findfont 5 scalefont def     % set numbering font
+    titlefont setfont
+    /xt printodd not
+      {50} {A4Qopt {700} {530} ifelse filename stringwidth pop sub}
+      ifelse def
+    /yt y0 ips ips add add def
+    /outpage {                     % output page with numbering
+      toprint {
+        titlefont setfont
+        xt yt moveto
+        filename show
+        3 0 rmoveto
+        pagenr 4 string cvs show
+        textfont setfont
+        gsave showpage grestore
+        } if
+      /pagenr pagenr 1 add def
+      printall not {/toprint toprint not def} if
+      } bdef
+    }
+    { /outpage {                   % output page without numbering
+      toprint {gsave showpage grestore} if
+      printall not {/toprint toprint not def} if
+      } bdef
+    } ifelse
+ 
+  A4Qopt {600.0 0 translate 90 rotate} if
+ 
+  x0 y0 iil add moveto
+  textfont setfont
+  /str256 256 string def
+ 
+  currentfile str256 readline          % clean start line garbage
+  pop pop
+ 
+% main loop:
+  { currentfile str256 readline             % Start of printer emulator loop
+    { dup length 0 le {pop (  ) } if
+      withcc {dup 0 get} {32} ifelse
+      /cc exch def
+      currentpoint exch pop
+      { cc 49 eq cc 12 eq or { y0 le {outpage} if      % 1  skip to line 1
+         y0 exit } if                          %      on new page
+        dup y0 gt withcc and {pop y0} if
+        cc 32 eq { iil sub exit } if            % blank space 1 line
+        cc 48 eq { iil 2 mul sub exit } if      % 0  space 2 lines
+        cc 45 eq { iil 3 mul sub exit } if      % -  space 3 lines
+        cc 43 eq { psplus sub exit } if        % +  suppress space
+        cc 01 eq { exit } if       % space 1 line after printing
+        cc 50 eq { exit } if       % space 1 line after printing
+        (PRTLW PS: invalid ASA or machine char) =  pstack
+        iil sub exit
+        } loop
+      dup y1 lt {pop outpage y0} if      % too far at bottom
+      x0 exch moveto cc 43 eq { psplus 0 rmoveto} if
+      withcc {dup length 1 sub 1 exch getinterval} if
+      toprint { show } { pop } ifelse
+      cc 43 eq {0 psplus rmoveto} if
+      cc 01 eq { 0 iil neg rmoveto } if   % space 1 line after printing
+      cc 50 eq { 0 iil neg rmoveto } if   % space 1 line after printing
+      }
+    {pop outpage printodd not toprint and {showpage} if exit} ifelse
+    } loop
+  } bdef
+%%EndProlog
+
+%%BeginSetup
+/fontname (Courier) def
+/ibold () def
+/pagenr 0 def
+/filename (Page) def
+%Fname: text to be printed on the right top corner in pointsize 5
+%       followed by a page number, 2*fontsize points above the top margin
+%Nr     : 0   no numbering of the pages, Fname will not printed too
+%       > 0   numbering on, start number of 1. page sent to printer
+/printall true def
+/printodd true def
+A4H
+/iil 0 def
+/inl 0 def
+/withcc false def
+ 
+% %%%%%%%%%%%%% %
+% User section: %
+% %%%%%%%%%%%%% %
+ 
+%Note: the char % starts a comment on a line !!!!!!!!!!!!!!!
+% Here follows a description of the parameters you can modify,
+% insert them before the last line.
+ 
+% Per default the imbed of this PostScript prolog in front of
+% a file allows you to print it as a text on an A4 unrotated page
+% with font size 10, interline spacing 11, top margin 750,
+% bottom margin 38 and left margin 100 and font Courier.
+%You can override these defaults by entering the corresponding command
+%before the last line of this prolog: (see example at the bottom)
+ 
+%"A4H" : select A4H format (unrotated) and set
+%        font height (ps),  interline (il), top margin (tm),
+%        bottom margin (bm) and left margin to
+%        ps 10 il 11  tm 750 bm 38 lm 100 nl 72
+%"A4Q" : select A4Q format (rotated) and set
+%      ps 7  il 7.7 tm 540 bm 17 lm 55 nl 68
+%"ps"  value: font size in points (1/72 inch)
+%"il"  value: interline 0: defaults to 110% of fontsize
+%"nl"  value: number of lines per page, compute "il" as "tm-bm/nl"
+%"bm"  value: bottom margin
+%"tm"  value: top margin
+%"lm"  value: left margin
+ 
+%Additionally you can select the folowing print options (keyword)
+%"Helvetica": Helvetica font selected, (proportional!)
+%            default font is Courier
+%"bold": bold font
+%"even": only even pages are to be printed
+%"odd" : only odd pages are to be printed
+%"CC"  : ASA or machine carriage control chars in first column
+ 
+% Usage Note:- the last entered options superseeds any previous one
+%        e.g. lm 200 bm 200 CC A4Q A4H even odd gives CC A4H odd
+%        and default margins for A4H
+%      - the print options *must* appear before the start of the emulator
+%        unless they would be considered as a text line, the last line
+%        with the keyword "startprint" below starts the emulator
+%      - options and keywords are case sensitive
+ 
+% Examples (commented):
+%    ps 10 bm 38 tm 750 lm 100 nl 65   % A4H, fontsize 10 points
+%    ps 9 bm 38 tm 750 lm 100  nl 72   % PRINTDOC A4H param.
+%    ps 7 bm 17 tm 540 lm 55   nl 68   % PRINTDOC A4Q param.
+% Print etiquette high quality, (generally the last etiquette is too far
+%     at bottom and not printed), uncomment next line for manualfeed!
+%     (manualfeed don't work correctly on some LaserWriter)
+%   statusdict begin /manualfeed true def end
+%   ps 8 bm 44 tm 800 lm 340           % 7 etiqu a 12 lines
+%   ps 8 bm 10 tm 720 lm 320           % 10 etiqu a 8 lines
+%   ps 10 il 10.75 bm 56 tm 810 lm 200 % 7 etiqu a 10 lines
+%          for subsequent photocopy on NASHUA 4100 (RZ office)
+ 
+/#copies 1 def
+%Here again an example, this time uncommented.
+%  your text/listing have to be appended after the *last* line
+% A4Q CC
+A4Q %%OPTIONS%%
+%%EndSetup
+startprint    % never touch this line !!!!!!!!!!!!

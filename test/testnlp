@@ -1,0 +1,15 @@
+#!/bin/sh
+
+ext=$1
+opt=$2
+src=$3
+
+if [ -f output-$ext.ps ]; then
+	#echo "Output file output-$ext.ps already generated."
+	:
+else
+	#echo "Creating file output-$ext.ps" 
+	echo "nlp $opt -ooutput-$ext.ps $src"
+	eval nlp -e $opt -ooutput-$ext.ps $src
+fi
+

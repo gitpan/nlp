@@ -1,0 +1,22 @@
+#
+#   list of links to make to push a vanilla distribution
+#   tree to its correct state
+#
+#   usage is <source> <whitespaces> <target>
+#
+
+#
+#   the GNU configuration utility scripts
+#   (because configure knows only one AUX dir and this
+#   is set to etc/ due to the fact hat there are a lot of other
+#   used utiltiies configure uses (install e.g.))
+#
+config/config.guess      etc/config.guess
+config/config.sub        etc/config.sub
+config/config.sup        etc/config.sup
+
+config/ac.pl             src/libAC.pl
+config/sc.pl             src/libSC.pl
+config/mc.pl             src/libMC.pl
+
+##EOF##

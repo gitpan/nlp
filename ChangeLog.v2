@@ -1,0 +1,92 @@
+
+950607 2.0 rse
+    o   releases new nlp, version 2.0 !!
+
+951121 2.1 rse
+    o   enhanced the test facility
+    o   fixed a bug for a2ps -H: now the option
+        will be sourrounded by "'" characters to
+        prevent -HRalf S. Engelschall instead of the
+        corrent one '-HRalf S. Engelschall'
+    o   fixed a bug with -m: the option was true per default,
+        and -m had no effect :-( now -m works correct
+    o   fixed a bug with -q: $printer was wrong, it is
+        $option{'printer'} !
+    o   fixed a bug in usage output for -P,-d default
+    o   Added the Copyrights to -V output
+    o   Highlighted the "resulting" word in nlp.1.in
+        to make clear that -s selects only pages
+        from the resulting Postscript (not from Source
+        when printing ASCII!)
+    o   Added support for pure portrait with borders!!
+    o   Added a explicit simplex mode option to
+        force printers in duplex-is-default-mode to
+        print simplex
+    o   Added -S (simplex mode) to the manual page
+    o   Added -s r option to nlp.1.in manual page
+    o   Updated the overview section in nlp.1.in
+    o   Now -V is directed to STDERR (similar to usage!)
+    o   Added Copyright notice to manual pages
+     
+960109 2.2 rse
+    o   added feature: filename "-" means nlp reads from stdin
+    o   lp commands output is redirected to /dev/null to
+        avoid the silly "request id xxx" messages under SysV
+    o   RELEASED 2.2
+
+960109 2.3 rse
+    o   fixed a target problem in toplevel Makefile.in
+
+960124 2.4 rse
+    o   fixed a few typo bugs in the manpage
+        (thanks to Traudi Riegg at TUM)
+
+960130 2.5 rse
+    o   fixed a wrong header name in nlp.1.in: AUTHOR -> COPYRIGHT
+
+960203 2.6 rse
+    o   added -sS for seperated printing, i.e. printing of the 
+        odd pages first and then automatically the even pages past.
+
+960207 2.7 rse
+    o   fixed a problem with terminal i/o: When the print data
+        came from STDIN, then our terminal promps (Y/N, etc.) 
+        couldn't read any more characters. Now /dev/tty is
+        used (Thanks to Traudi Riegg at TUM)
+    o   reversed the meaning of "-m" option: It was
+        "interpret metachars", now it is "visualize metachars",
+        i.e. now NLP interprets metachars per default and
+        option "-m" disabled this and visualizes the charcters
+        in caret notation.
+    o   added toplevel headers to all sourcefiles
+    o   added my email address to the manual-page
+
+960207 2.8 rse
+    o   moved src/cap to cap and updated sunbroy.cap
+    o   patched config.guess to accept FreeBSD 2.x-RELEASE etc.
+    o   fixed a few bugs in nlp.1.in (manpage)
+    o   fixed more bugs in the manpage (thanks to Traudi Riegg and
+        their collegues)
+    o   added check for Header length (max. 35 chars)
+
+960304 2.9 rse
+    o   added more output variants of manpages
+    o   fixed a great bug in option handling. A simple
+        "nlp <options> <file1> <file2> ..." leads to printing of <file1> with
+        <options> but "<file2> .." were printed without any such options!
+        Thanks to Olaf Mueller (mueller@informatik.tu-muenchen.de) for the
+        hint!
+    o   Fixed a second bug in option handling:
+        Now "nlp <options1> <file1> <option2> <file2>" are printed correctly,
+        .i.e. <file2> has _ONLY_ <options2> applied, not <options1> _AND_
+        <options2>. And NLPTOPS are prepended to _BOTH_ <options1> and
+        <options2>!
+
+961103 2.10 rse
+    o   now a2ps and the psutils are no longer part of the 
+        nlp distribution. They have to be installed before nlp gets
+        installed. The "configure" script now find them in the PATH.
+
+970228 2.11 rse
+    o   
+

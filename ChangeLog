@@ -1,0 +1,5 @@
+
+  3.0.0 970226 o cleaned up the sources
+               o added -r option to remove print mode commands
+			   o added -f option to apply external filters
+

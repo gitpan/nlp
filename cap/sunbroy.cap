@@ -1,0 +1,86 @@
+##
+##  printer.cap -- nlp printer capability database
+##                 for TUM, Lehrstuhl Broy, sunbroy-workstation-cluster
+##
+
+efekt|defekt:\
+    :type=HP Laserjet 4:\
+    :mode=Laser:\
+	:dpi=600:\
+    :duplex=no:\
+    :spoolhost=hpbroy8(direct):\
+    :location=G0106, 5354, Allgemeiner Rechnerraum Gabelsbergerstr. 39:
+
+eluxe|deluxe:\
+    :type=HP Laserjet 4:\
+    :mode=Laser:\
+	:dpi=600:\
+    :duplex=yes:\
+    :spoolhost=hpbroy13(indirect):\
+    :location=S2221, 8491, Praktikumsraum:
+
+at:\
+    :type=NEC Silentwriter2 S60P:\
+    :mode=Tintenstrahl:\
+	:dpi=300:\
+    :duplex=no:\
+    :spoolhost=sunbroy7(direct):\
+    :location=S2231, 2692, Konrad Slind:
+
+rian|prian|Prian:\
+    :type=NEC Silentwriter2 S60P:\
+    :mode=Tintenstrahl:\
+	:dpi=300:\
+    :duplex=no:\
+    :spoolhost=sunbroy14(direct):\
+    :location=S3238, -, Allgemeiner Rechnerraum:
+
+g1:\
+    :type=NEC Silentwriter2 S62P:\
+    :mode=Tintenstrahl:\
+	:dpi=300:\
+    :duplex=no:\
+    :spoolhost=sunbroy12(direct):\
+    :location=G106, 5354, Allgemeiner Rechnerraum:
+
+acapo|dacapo:\
+    :type=HP Laserjet 4:\
+    :mode=Laser:\
+	:dpi=300:\
+    :duplex=yes:\
+    :spoolhost=sunbroy16(indirect):\
+    :location=-3209, 2094, ??????:
+
+s1:\
+    :type=NEC Silentwriter2 S60P:\
+    :mode=Tintenstrahl:\
+	:dpi=300:\
+    :duplex=no:\
+    :spoolhost=sunbroy20(direct):\
+    :location=-1203, 2384, Allgemeiner Rechnerraum (Flur):
+
+retty|pretty|Pretty:\
+    :type=HP Laserjet 4M:\
+    :mode=Laser:\
+	:dpi=600:\
+    :duplex=yes:\
+    :spoolhost=sunbroy22(direct):\
+    :location=S3226, 8176, Gabriele Turner:
+
+er:\
+    :type=NEC Silentwriter LC890:\
+    :mode=Tintenstrahl:\
+	:dpi=300:\
+    :duplex=no:\
+    :spoolhost=sunbroy39(direct):\
+    :location=Kammerl, 2.Stock, (Gabelsbergerstr. 39):
+
+rima|prima|Prima:\
+    :type=HP Laserjet 4si:\
+    :mode=Laser:\
+	:dpi=600:\
+    :duplex=yes:\
+    :spoolhost=sunbroy51(indirect):\
+    :location=S3242, -, Besprechungsraum:
+
+##EOF##

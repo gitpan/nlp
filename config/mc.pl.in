@@ -1,0 +1,13 @@
+
+package Config;
+
+$PRG_A2PS      = "@path_a2ps@";
+$PRG_PSSELECT  = "@path_psselect@";
+$PRG_PSBOOK    = "@path_psbook@";
+$PRG_PSTOPS    = "@path_pstops@";
+$PRG_DVIPS     = "@path_dvips@";
+$PRG_GHOSTVIEW = "@path_ghostview@";
+
+1;
+
+#EOF#
