@@ -1,0 +1,264 @@
+
+
+
+PRESCRIPT(4)                                         PRESCRIPT(4)
+
+
+NNAAMMEE
+       prescript - LaTeX-like language for Postscript generation
+
+
+DDEESSCCRRIIPPTTIIOONN
+       _p_r_e_s_c_r_i_p_t  has  been  designed  in  conjunction with _a_2_p_s.
+       _a_2_p_s is an ASCII to PostScript converter with the  ability
+       to  pretty  print  sources for different languages. Hence,
+       bold sequences, special characters etc.  were  implemented
+       in  _a_2_p_s.  To  allow  the direct access to those features,
+       _p_r_e_s_c_r_i_p_t became an input language for _a_2_p_s, were  special
+       font treatments are specified in a LaTeX-like syntax.
+
+       The  main  advantages  for using _p_r_e_s_c_r_i_p_t are: it is very
+       simple, it is LaTeX compatible (that is, correctly written
+       _p_r_e_s_c_r_i_p_t  files do compile with LaTeX); _a_2_p_s is small and
+       easy to install, hence it is available on every UNIX plat-
+       form.  It  can  be  a  good  candidate  for  generation of
+       postscript output (syntactical pretty-printers, generation
+       of various reports etc.).
+
+
+SSYYNNTTAAXX
+       Every  command name begins by a backslash (\). If the com-
+       mand uses an argument, it is given  between  curly  braces
+       with  no spaces between the command name and the argument.
+
+       The main limit on _p_r_e_s_c_r_i_p_t is that no command can be used
+       inside  another  command.  For instance, though it is per-
+       fectly legal in LaTeX, the following line  will  be  badly
+       interpreted by _a_2_p_s:
+
+            \textbf{Problems  using \textit{prescript} instead of
+       \LaTeX}
+
+       The correct way to write this in _p_r_e_s_c_r_i_p_t is
+
+            \textbf{Problems      using}       \textbi{prescript}
+       \textbf{instead of} \LaTeX.
+
+       Everything  from  an  unquoted  %  to  the  end of line is
+       ignored (comments).
+
+
+   SSttrruuccttuurree ccoommmmaannddss
+       \\sseeccttiioonn{{_T_i_t_l_e}},, \\ssuubbsseeccttiioonn{{_T_i_t_l_e}},, \\ssuubbssuubbsseecc--
+             ttiioonn{{_T_i_t_l_e}}..
+             Used  to  specify the title of a section, subsection
+             or subsubsection.
+
+       \\tteexxttbbff{{_t_e_x_t}},, \\tteexxttiitt{{_t_e_x_t}},, \\tteexxttbbii{{_t_e_x_t}},, \\tteexxttrrmm{{_t_e_x_t}}
+             _t_e_x_t is written in bold, italic, bold-italic, and in
+             times.
+
+
+
+
+                          1 October 1996                        1
+
+
+
+
+
+PRESCRIPT(4)                                         PRESCRIPT(4)
+
+
+       \\tteexxttssyy{{_t_e_x_t}}
+             _t_e_x_t is written in the Postscript symbol font.  This
+             feature  is  not compatible with LaTeX. It is recom-
+             mended, when possible, to use the  special  keywords
+             denoting symbols, which are compatible with LaTeX.
+
+   SSppeecciiaall ssyymmbboollss
+       There  is  a big menagerie of symbols. To get its list, it
+       is suggested to print _a_2_p_s's report about _p_r_e_s_c_r_i_p_t  using
+       the command line:
+
+            a2ps -Wprescript | a2ps -kprescript
+
+       The  reader  should  be  aware  that LaTeX is more exigent
+       about the special symbols. Most of them  must  be  in  so-
+       called  math  mode,  which  means that the command must be
+       inside $ signs. For instance, though
+            If \forall x \in E, x \in F then E \subseteq F.
+       is perfectly legal in _p_r_e_s_c_r_i_p_t, it should be written
+            If $\forall x \in E, x \in F$ then $E \subseteq F$.
+       for LaTeX. Since in _p_r_e_s_c_r_i_p_t every $ is discarded (unless
+       quoted by a \), the second form is also admitted.
+
+   SSppeecciiaall cchhaarraacctteerrss
+       $  is  ignored  in _p_r_e_s_c_r_i_p_t for compatibility with LaTeX,
+       and % introduces a comment. Hence they are the only symbol
+       which  have  to be quoted by a \. The following characters
+       should also be quoted to produce good LaTeX files, but are
+       accepted  by  _p_r_e_s_c_r_i_p_t: _, &, #.  Note that _i_n_s_i_d_e _a _c_o_m_-
+       _m_a_n_d, like \textbf, the quotation mechanism does not  work
+       in  _p_r_e_s_c_r_i_p_t  (\texrm{#$%} writes #$%) though LaTeX still
+       requires quotation. Hence whenever special  characters  or
+       symbols  are  introduced, they should be at the outer most
+       level.
+
+   QQuuoottaattiioonn
+       There is a general mechanism to  avoid  special  sequences
+       from being interpreted: the commands \verb+_q_u_o_t_e_d _s_t_r_i_n_g+,
+       where + can be any symbol in +, !, |, #, =.
+
+
+DDIIFFFFEERREENNCCEESS WWIITTHH LLaaTTeeXX
+   LLaaTTeeXX ccoommmmaannddss iiggnnoorreedd iinn pprreessccrriipptt
+       Some LaTeX commands have no equivalent in  _p_r_e_s_c_r_i_p_t,  but
+       are  simply  skipped  at  compilation time (if immediately
+       followed by an end-of-line):
+
+               \\bbeeggiinn{{ddooccuummeenntt}}  \\eenndd{{ddooccuummeenntt}}   \\bbeeggiinn{{iitteemmiizzee}}
+              \\eenndd{{iitteemmiizzee}}   \\bbeeggiinn{{eennuummeerraattee}}   \\eenndd{{eennuummeerraattee}}
+              \\bbeeggiinn{{ddeessccrriippttiioonn}} \\eenndd{{ddeessccrriippttiioonn}}
+
+       Everything between
+            %%prescript:skip
+       and
+
+
+
+                          1 October 1996                        2
+
+
+
+
+
+PRESCRIPT(4)                                         PRESCRIPT(4)
+
+
+            %%prescript:piks
+       will be ignored in _p_r_e_s_c_r_i_p_t, so that there can  lay  com-
+       mand definitions for LaTeX exclusively.
+
+   CCoommmmaannddss aavvaaiillaabbllee iinn pprreessccrriipptt bbuutt nnoott iinn LLaaTTeeXX
+       The  commands  \textbi  (for bold-italic) and \textsy (for
+       symbol) do not exist in LaTeX.  They should be defined  in
+       the preamble:
+       %%prescript:skip
+       \newcommand{\textbi}[1]{\textbf{\it #1}}
+       \newcommand{\textsy}[1]{#1}
+       %%prescript:piks
+
+       There  is  no way in _p_r_e_s_c_r_i_p_t to get an automatic number-
+       ing. There are no equivalent to the LaTeX environment _e_n_u_-
+       _m_e_r_a_t_e. But every command beginning by \text is doubled by
+       a command beginning by \magic. _a_2_p_s behave the same way on
+       both  families  of  command.  Hence, if one specifies that
+       arguments of that  functions  should  be  ignored  in  the
+       preamble of the LaTeX document, the numbering is emulated.
+       For instance
+       \begin{enumerate}
+       \magicbf{1.}item First line
+       \magicbf{2.}item Second line
+       \end{enumerate}
+       will be treated the same way both in _p_r_e_s_c_r_i_p_t and  LaTeX.
+
+       Some symbols are available in _p_r_e_s_c_r_i_p_t but not in LaTeX:
+
+              \\aalleexx  \\AAllpphhaa  \\aappppllee  \\BBeettaa  \\ccaarrrriiaaggeerreettuurrnn  \\CChhii
+              \\EEppssiilloonn \\EEttaa \\fflloorriinn \\IIoottaa \\KKaappppaa \\MMuu \\NNuu \\OOmmiiccrroonn
+              \\oommiiccrroonn   \\rraaddiicc  \\rreeggiisstteerr  \\RRhhoo  \\ssuucchhtthhaatt  \\TTaauu
+              \\tthheerreeffoorree \\ttrraaddeemmaarrkk \\vvaarrUUppssiilloonn \\ZZeettaa
+
+       A good example of a LaTeX preamble to  get  LaTeX  compile
+       _p_r_e_s_c_r_i_p_t files is given by the report of _a_2_p_s.
+
+
+EEXXAAMMPPLLEESS
+       _p_r_e_s_c_r_i_p_t  and _a_2_p_s can be used for one-the-fly formating.
+       For instance, on the passwd file:
+
+            ypcat passwd |
+              awk -F: '{print "\textbf{" $5 "} (" $1 ") \rightar-
+       row\textit{" $7 "}"}' |
+              a2ps -kpre -t -P
+
+
+SSEEEE AALLSSOO
+       me(7),   ms(7),   tex(1),   latex(1),  a2ps(1),  troff(1),
+       nroff(1).
+
+
+
+
+
+
+                          1 October 1996                        3
+
+
+
+
+
+PRESCRIPT(4)                                         PRESCRIPT(4)
+
+
+AAUUTTHHOORR
+       Akim Demaille (demaille@inf.enst.fr).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          1 October 1996                        4
+
+

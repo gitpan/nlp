@@ -10,6 +10,16 @@ AC_CONFIG_HEADER(config/ac.h)dnl
 AC_CONFIG_AUX_DIR(etc)
 AC_PREFIX_DEFAULT(/usr/local)
 
+dnl ##  fix installation paths
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+eval "dir=$prefix"
+case $dir in
+    *nlp* ) libsubdir= ;;
+	      * ) libsubdir="/nlp" ;;
+esac
+AC_SUBST(libsubdir)
+libdir=$dir/lib
+
 AC_FIX_DIST_TREE
 
 AC_CONFIG_PARAMS

@@ -13,6 +13,8 @@
 
 require 5.000;
 
+BEGIN { $^W = 0; } # get rid of useless warnings
+
 require "libAC.pl";
 require "libSC.pl";
 require "libMC.pl";

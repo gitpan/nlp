@@ -1,7 +1,36 @@
 
- 1. $ ./configure --prefix=/path/to/nlp/install/dir
+  I N S T A L L A T I O N
+  =======================
 
- 2. $ make 
+  1. Requirements
 
- 3. $ make install
+     Make sure you have Perl 5 already installed.   If not do this first by
+     grabbing the Perl 5 distribution from any CPAN site:
+     http://www.perl.org/perl/CPAN.
+
+     Now install the packages a2ps and psutils on your system.  NLP is
+     designed to work with a2ps 4.6.1 and psutils 1.17.  The sources can be
+     found in the contrib/ directory of the NLP distribution.
+     
+  2. Configuring the source
+
+     $ ./configure --prefix=/path/to/nlp
+
+  3. Build the programs
+
+     $ make
+
+  4. Install the programs into
+     /path/to/nlp/{bin,man,lib[/nlp]}/:
+
+     $ make install
+
+  5. Install a printer.cap file holding your printer list into
+     /path/to/nlp/lib[/nlp]}/printer.cap
+     Use one of the files in the cap/ directory of the distribution as an
+     example.
+
+  6. Cleanup
+
+     $ make distclean
 

@@ -1,0 +1,138 @@
+#
+# Description: Makefile to construct and install a2ps. Don't forget
+# to give your own values to define the variable name of compiler
+# (see OPTIONS).
+#
+VERSION=@VERSION@
+# 
+# Created: Sep 17 1996 by demaille@inf.enst.fr (Akim Demaille)
+#
+
+# Copyright (c) 1993, 1994, Miguel Santana, M.Santana@frgu.bull.fr
+#
+# Permission is granted to use, copy, and distribute this software for
+# non commercial use, provided that the above copyright notice appear in
+# all copies and that both that copyright notice and this permission
+# notice appear in supporting documentation.
+#
+# Permission to modify the software is granted, but not the right to
+# distribute the modified code. Please report bugs and changes to
+# demaille@inf.enst.fr || Emmanuel.Briot@enst-bretagne.fr
+# 
+# This software is provided "as is" without express or implied warranty.
+
+###	Start of system configuring section	###
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ -s
+INSTALL_DATA = @INSTALL_DATA@
+
+CC	= @CC@
+CFLAGS	= @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS	= @LDFLAGS@
+LIBS	= @LIBS@
+DEFS	= @DEFS@
+
+prefix	= @prefix@
+exec_prefix=@exec_prefix@
+srcdir	= @srcdir@
+top_srcdir	= @top_srcdir@
+
+bindir	= @bindir@
+manbinext		= 1
+manfileformatext	= 4
+mandir	= @mandir@
+catdir	= @mandir@
+###	End of system configuration section	###
+
+# stupid a**holes who add non-compatible "features"
+SHELL	=/bin/sh
+
+FILES	= INSTALL README TODO install-sh aclocal.m4		\
+	  Makefile.in config.h.in configure.in styles.c.in	\
+	  configure a2ps.man prescript.man			\
+	  a2ps.c a2ps.h afm.c afm.h postscript.c postscript.h 	\
+	  report.c report.h styles.c styles.h buffer.c buffer.h	\
+	  routines.c routines.h ansi.h
+
+all:		Makefile a2ps
+
+# Configuration
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
+
+# Expansion of the styles definition
+styles.c:	styles.c.in
+		m4 --prefix-builtins styles.c.in > styles.c
+
+# Compilation
+OBJS	      = a2ps.o styles.o report.o postscript.o buffer.o afm.o routines.o
+
+a2ps:		$(OBJS) Makefile
+		@echo "Linking a2ps ... "
+		$(CC) $(LDFLAGS) -o ./a2ps $(OBJS)
+
+# Installation
+install:	install_a2ps install_man
+
+install_a2ps:	a2ps
+		@echo "Installing a2ps ..."
+		$(INSTALL_PROGRAM) a2ps $(bindir)/a2ps
+
+install_man:	a2ps.man a2ps.cat prescript.man prescript.cat
+		@echo "Installing a2ps man page ..."
+		$(INSTALL_DATA) a2ps.man $(mandir)/man${manbinext}/a2ps.$(manbinext) 
+		$(INSTALL_DATA) a2ps.cat $(catdir)/cat${manbinext}/a2ps.$(manbinext) 
+		$(INSTALL_DATA) prescript.man $(mandir)/man${manfileformatext}/prescript.$(manfileformatext) 
+		$(INSTALL_DATA) prescript.cat $(catdir)/cat${manfileformatext}/prescript.$(manfileformatext) 
+
+a2ps.cat:	a2ps.man
+		nroff -man a2ps.man > a2ps.cat
+
+prescript.cat:	prescript.man
+		nroff -man prescript.man > prescript.cat
+
+# Distribution
+shar:;		shar -b -oa2ps-$(VERSION).shar $(FILES)
+
+tar:		configure Makefile styles.c
+		@echo "Preparing the standard distribution ..."
+		mkdir a2ps-$(VERSION)
+		cp -p $(FILES) a2ps-$(VERSION)
+		tar cvf a2ps-$(VERSION).tar a2ps-$(VERSION)
+		/bin/rm -rf a2ps-$(VERSION)
+
+xtar:		a2ps configure Makefile styles.c
+		@echo "Preparing the distribution with executable ..."
+		mkdir a2ps-$(VERSION)
+		cp -p $(FILES) a2ps a2ps-$(VERSION)
+		tar cvf a2ps-$(VERSION)-$(ARCH).tar a2ps-$(VERSION)
+		/bin/rm -rf a2ps-$(VERSION)
+
+dtar:		configure Makefile styles.c
+		mkdir a2ps-dev-$(VERSION)
+		@echo "Preparing the developper distribution ..."
+		/bin/rm test-ps/*.x.ps
+		cp -rp $(FILES) getwx getISOwx test test-ps a2ps-dev-$(VERSION)
+		tar cvf a2ps-dev-$(VERSION).tar a2ps-dev-$(VERSION)
+		/bin/rm -rf a2ps-dev-$(VERSION)
+
+tgz:		tar
+		gzip -9 -f a2ps-$(VERSION).tar
+
+xtgz:		xtar
+		gzip -9 -f a2ps-$(VERSION)-$(ARCH).tar
+
+dtgz:		dtar
+		gzip -9 -f a2ps-dev-$(VERSION).tar
+
+clean:;		rm -f $(OBJS) a2ps core *~ *.ln
+		rm -f a2ps.aux a2ps.dvi a2ps.log a2ps.tex
+		rm -f a2ps.ps a2ps.cat a2ps.pre
+
+distclean maintainer-clean:;
+		rm -f $(OBJS) a2ps core *~ a2ps.ln a2ps.ps a2ps.cat
+		rm -f Makefile config.h config.cache config.status config.log

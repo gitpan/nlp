@@ -4,25 +4,25 @@ package Vers;
 
 # for logfiles, etc.
 $NLP_Version =
-    "3.0.2 (16-03-1997)";
+    "3.0.4 (24-10-1997)";
 
 # interactive 'hello' string to identify us to the user
 $NLP_Hello = 
-    "This is NLP Version 3.0.2 (16-03-1997)";
+    "This is NLP Version 3.0.4 (24-10-1997)";
 
 # a GNU --version output
 $NLP_GNUVersion =
-    "NLP Version 3.0.2";
+    "NLP Version 3.0.4";
 
 # a UNIX what(1) id string
 $NLP_WhatID =
-    "@(#)NLP Version 3.0.2 (16-03-1997)";
+    "@(#)NLP Version 3.0.4 (24-10-1997)";
 
 # a RCS ident(1) id string
 $NLP_RCSIdentID =
-    "\$Id: NLP 3.0.2 16-03-1997 \$";
+    "\$Id: NLP 3.0.4 24-10-1997 \$";
 
 # a WWW id string
 $NLP_WebID =
-    "NLP/3.0.2";
+    "NLP/3.0.4";
 1;

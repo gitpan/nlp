@@ -1,0 +1,77 @@
+This is the version 4.6 of a2ps, a program to format an ASCII file for
+printing in a postscript printer. As the copyright indicates, this
+distribution can be freely redistributed.
+
+Initial version was a shell program written by evan@csli (Evan
+Kirshenbaum). It was very slow and contained many bugs. A new version
+was written in C by Miguel SANTANA for improve speed execution and
+portability.  Many new features and improvements have been added since
+this first version. Many contributions (changes, fixes, ideas) were
+done by a2ps users in order to improve it. From the latest known
+version from M. Santana (4.3), Emmanuel Briot implemented bold faces
+for keywords in ada, c and c++. Starting from this point, remodeling
+completely the style description and handling for the various
+languages, E. Briot and A. Demaille built this version, fully
+compatible with version 4.3.
+
+Some notes on the distribution:
+
+    Most of the work for the installation is done by ./configure.
+    See INSTALL for instructions.
+    Some choices are to make, and to give to ./configure
+	--disable-A4
+		if you want US letter as standard sheet
+	--disable-ISOLatin1
+		if you want only ASCII as default
+        --disable_auto
+		if you don't want a2ps to guess the style sheet to
+		use by default. Its guess is based on file suffix.
+		If disable, default is to print is plain style
+	--enable-print-default
+		if you want that default output is to printer
+		instead of stdout
+  	--enable-1sided=OPT
+		OPT is the option to give the the print service
+		to get single sided prints
+  	--enable-2sided=OPT
+		Same as previous, but for double sided prints. This option
+		is required if you expect a2ps to have double-sided
+		capabilities. Here, I use
+		--enable-2sided=-odouble
+	--disable-2-sided
+		if you don't want that default behaviour is to print
+		double-sided
+
+    a2ps has been successfully ported to Solaris, SunOS, Linux, HP-UX.
+    It is even used as a filter for print services.
+
+    a2ps *had* been successfully MSDOS. 
+    Now it's up to you to tell us whether it is still portable :)
+
+The a2ps distribution consists of the following files:
+
+	README		This message
+	INSTALL		Information on the installation process
+	TODO		Some things to be done
+	configure	A shell script that helps the installation
+	Makefile.in config.h.in configure.in
+			Everything about configuring
+	a2ps.h		global typedefs, vars, defines etc.
+	a2ps.c		main routine and interface with user
+	style.[ch]	style sheets for each languages
+	styles.c.in	a precursor of styles.c
+			This is the file you should work on if you
+			want to specify new languages. Needs GNU m4.
+	afm.[ch]	metric info on postscript fonts
+	buffer.[ch]	input and parsing routines
+	postscript.[ch]	routines for output in postscript
+	report.[ch]	routines related to option -W
+	a2ps.man	a troff manual (man file)
+
+Please send problems and feedback to:
+
+   Akim Demaille (demaille@inf.enst.fr)
+   Emmanuel Briot (ebr@drce.matra-com.fr)
+
+PS(um): if you're happy with a2ps, or just if you installed it, please
+let_us_know! We would be so happy :).

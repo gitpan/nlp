@@ -1,10 +1,15 @@
 #!/bin/sh -
 ##
-##   newvers -- setup new program version file
+##   NEWVERS -- setup new program version file
 ##   Copyright (c) 1994-1997 Ralf S. Engelschall, <rse@engelschall.com>
 ##
-VERSION="2.0"
-DATE="01 Jan 1997"
+##   NOTICE: This intentionally written in Bourne-Shell instead
+##           of my preferred language Perl because this is also
+##           used as a version display tool in "./configire" steps...
+##
+
+VERSION="2.2.2"
+   DATE="02-06-1997"
 
 #   print version information line
 print_version () {
@@ -13,50 +18,91 @@ print_version () {
 
 #   give general help information
 print_help () {
-cat <<'EOT'
+    cat <<'EOT'
 NEWVERS -- generate/maintain a version information file
 Copyright (c) 1994-1997 Ralf S. Engelschall, <rse@engelschall.com>
 
 NEWVERS will create and update a version information file,
-which can be setup as a C source file or a Perl source file.
+which can be setup in either plain text or the C or Perl language.
 
 Examples:
-    $ newvers -m c -p TestProg version.c
+    $ newvers -m txt  -p TestProg version.txt
+    $ newvers -m c    -p TestProg version.c
     $ newvers -m perl -p TestProg version.pl
 EOT
 }
 
 #   give usage information
 print_usage () {
-cat <<'EOT'
+    cat <<'EOT'
 Usage: newvers [options] versionfile
     Options are:
-        -l<lang>        set language to one of "c", "perl" 
-        -p<progname>    set program name
-        -r<v>.<r>.<p>   set release version string
-        -i{v|r|p}       increase version, revision or patchlevel (default)
-        -d              display current version only
-        -D              display current version only (incl. date)
-        -V              print NEWVERS version
-        -h              print help page
+        -l<lang>          set language to one of "txt", "c" or "perl" 
+        -p<progname>      set program name
+        -r<v>.<r>[.pb]<p> set release version string
+        -i{v|r|P|p|b|a|s} increase version, revision or {alpha,batch,patch,snap}level
+        -d                display current version only
+        -D                display current version only (incl. date)
+        -V                print NEWVERS version
+        -h                print help page
 EOT
 }
 
 #   process the argument line
-LANG=unknown
+LANGUAGE=unknown
 PROGNAME="-UNKNOWN-"
 VERSION=unknown
 REPORT=NO
 REPORTFULL=NO
-INCREASE=p
-set -- `getopt l:p:r:i:dDVh $*`
+INCREASE=P
+
+#   fallback if "getopt" is not available on system
+getopt=getopt
+eval "$getopt" >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    rm -f /tmp/getopt.c >/dev/null 2>&1
+    cat >/tmp/getopt.c <<EOT
+#include <stdio.h>
+main(argc, argv)
+int argc;
+char *argv[];
+{
+    extern int optind;
+    extern char *optarg;
+    int c;
+    int status = 0;
+    optind = 2; /* Past the program name and the option letters. */
+    while ((c = getopt(argc, argv, argv[1])) != EOF)
+        switch (c) {
+        case '?':
+            status = 1; /* getopt routine gave message */
+            break;
+        default:
+            if (optarg != NULL)
+                printf(" -%c %s", c, optarg);
+            else
+                printf(" -%c", c);
+            break;
+        }
+    printf(" --");
+    for (; optind < argc; optind++)
+        printf(" %s", argv[optind]);
+    printf("\n");
+    exit(status);
+}
+EOT
+        cc -o /tmp/getopt /tmp/getopt.c
+    getopt=/tmp/getopt
+fi
+set -- `$getopt l:p:r:i:dDVh $*`
 if [ $? != 0 ]; then
     print_usage
     exit 2
 fi
+rm -f /tmp/getopt >/dev/null 2>&1
 for opt in $*; do
     case $opt in
-        -l)  LANG=$2;          shift; shift  ;;
+        -l)  LANGUAGE=$2;      shift; shift  ;;
         -p)  PROGNAME=$2;      shift; shift  ;;
         -r)  VERSION=$2;       shift; shift  ;;
         -i)  INCREASE=$2;      shift; shift  ;;
@@ -73,66 +119,90 @@ case $# in
 esac
 
 #   determine language
-if [ "$LANG" = "unknown" ]; then
+if [ "$LANGUAGE" = "unknown" ]; then
     case $VERSIONFILE in
-        *.c  ) LANG=c    ;;
-        *.pl ) LANG=perl ;;
+        *.txt )       LANGUAGE=txt  ;;
+        *.c )         LANGUAGE=c    ;;
+        *.pl | *.pm ) LANGUAGE=perl ;;
+        * )           echo "Unkown language type"; exit 1 ;;
     esac
 fi
 
-##   determine version
+#   determine version
 if [ "$VERSION" = "unknown" ]; then
     if [ -r "$VERSIONFILE" ]; then
         #   grep out current information
-        id=`grep '"[0-9]*.[0-9]*.[0-9]* ([0-9]*-[0-9]*-[0-9]*)"' $VERSIONFILE | \
+        id=`grep 'Version [0-9]*.[0-9]*[.abps][0-9]* ([0-9]*-[0-9]*-[0-9]*)' $VERSIONFILE | \
             head -1 | \
-            sed -e 's%.*"\([0-9]*\.[0-9]*\.[0-9]*\) (\([0-9]*-[0-9]*-[0-9]*\)).*%\1.\2%'`
-        version=`echo $id | awk -F. '{ print $1 }'`
-        revision=`echo $id | awk -F. '{ print $2 }'`
-        patchlevel=`echo $id | awk -F. '{ print $3 }'`
-        date=`echo $id | awk -F. '{ print $4 }'`
+            sed -e 's%.*Version \([0-9]*\)\.\([0-9]*\)\([.abps]\)\([0-9]*\) (\([0-9]*-[0-9]*-[0-9]*\)).*%\1:\2:\3:\4:\5%'`
+        version=`echo $id | awk -F: '{ print $1 }'`
+        revision=`echo $id | awk -F: '{ print $2 }'`
+        bptype=`echo $id | awk -F: '{ print $3 }'`
+        bplevel=`echo $id | awk -F: '{ print $4 }'`
+        date=`echo $id | awk -F: '{ print $5 }'`
 
         if [ $REPORT = NO ]; then
-            if [ $INCREASE = p ]; then
-                patchlevel=`expr $patchlevel + 1`
-            else
-                if [ $INCREASE = r ]; then
+            case $INCREASE in
+                b )
+                    bplevel=`expr $bplevel + 1`
+                    bptype=b
+                    ;;
+                a )
+                    bplevel=`expr $bplevel + 1`
+                    bptype=a
+                    ;;
+                s )
+                    bplevel=`expr $bplevel + 1`
+                    bptype=s
+                    ;;
+                P )
+                    bplevel=`expr $bplevel + 1`
+                    bptype=.
+                    ;;
+                p )
+                    bplevel=`expr $bplevel + 1`
+                    bptype=p
+                    ;;
+                r ) 
                     revision=`expr $revision + 1`
-                    patchlevel=0
-                else
-                    if [ $INCREASE = v ]; then
-                        version=`expr $version + 1`
-                        revision=0
-                        patchlevel=0
-                    fi
-                fi
-            fi
+                    bplevel=0
+                    ;;
+                v )
+                    version=`expr $version + 1`
+                    revision=0
+                    bplevel=0
+                    ;;
+            esac
+            date=`date '+%d-%m-19%y'`
         fi
 
     else
         #   intialise to first version
-        version=1
-        revision=0
-        patchlevel=0
+        version=0
+        revision=5
+        bptype=b
+        bplevel=0
         date=`date '+%d-%m-19%y'`
     fi
 else
     #   take given version
-    version=`echo $VERSION | awk -F. '{ print $1 }'`
-    revision=`echo $VERSION | awk -F. '{ print $2 }'`
-    patchlevel=`echo $VERSION | awk -F. '{ print $3 }'`
+    VERSION=`echo $VERSION | sed -e 's%\([0-9]*\)\.\([0-9]*\)\([.abps]\)\([0-9]*\).*%\1:\2:\3:\4%'`
+    version=`echo $VERSION | awk -F: '{ print $1 }'`
+    revision=`echo $VERSION | awk -F: '{ print $2 }'`
+    bptype=`echo $VERSION | awk -F: '{ print $3 }'`
+    bplevel=`echo $VERSION | awk -F: '{ print $4 }'`
     date=`date '+%d-%m-19%y'`
 fi
 
 if [ $REPORT = YES ]; then
     if [ $REPORTFULL = YES ]; then
-        echo "$version.$revision.$patchlevel ($date)"
+        echo "$version.$revision$bptype$bplevel ($date)"
     else
-        echo "$version.$revision.$patchlevel"
+        echo "$version.$revision$bptype$bplevel"
     fi
     exit 0;
 else
-    echo "new version: $version.$revision.$patchlevel ($date)"
+    echo "new version: $version.$revision$bptype$bplevel ($date)"
 fi
 
 #   create date string
@@ -143,34 +213,45 @@ day=`date '+%d'`
 #   create the version file according the the selected language  
 tmpfile="/tmp/newvers.tmp.$$"
 rm -f $tmpfile
-case $LANG in
+case $LANGUAGE in
+    txt )
+        cat >$tmpfile <<'EOF'
+
+  This is @PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)
+
+EOF
+        ;;
     c )
         cat >$tmpfile <<'EOF'
 /* !! This file was automatically generated by NEWVERS !! */
 
 /* for logfiles, etc. */
 char @PROGNAME@_Version[] =
-    "@VERSION@.@REVISION@.@PATCHLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
+    "@VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
 
 /* interactive 'hello' string to identify us to the user */
 char @PROGNAME@_Hello[] = 
-    "This is @PROGNAME@ Version @VERSION@.@REVISION@.@PATCHLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
+    "This is @PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
 
 /* a GNU --version output */
 char @PROGNAME@_GNUVersion[] =
-    "@PROGNAME@ Version @VERSION@.@REVISION@.@PATCHLEVEL@";
+    "@PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@";
 
 /* a UNIX what(1) id string */
 char @PROGNAME@_WhatID[] =
-    "@(#)@PROGNAME@ Version @VERSION@.@REVISION@.@PATCHLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
+    "@(#)@PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
 
 /* a RCS ident(1) id string */
 char @PROGNAME@_RCSIdentID[] =
-    "$Id: @PROGNAME@ @VERSION@.@REVISION@.@PATCHLEVEL@ @DAY@-@MONTH@-@YEAR@ $";
+    "$Id: @PROGNAME@ @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ @DAY@-@MONTH@-@YEAR@ $";
 
 /* a WWW id string */
 char @PROGNAME@_WebID[] =
-    "@PROGNAME@/@VERSION@.@REVISION@.@PATCHLEVEL@";
+    "@PROGNAME@/@VERSION@.@REVISION@@BPTYPE@@BPLEVEL@";
+
+/* a plain id string */
+char @PROGNAME@_PlainID[] =
+    "@VERSION@.@REVISION@@BPTYPE@@BPLEVEL@";
 
 EOF
         ;;
@@ -182,27 +263,32 @@ package Vers;
 
 # for logfiles, etc.
 $@PROGNAME@_Version =
-    "@VERSION@.@REVISION@.@PATCHLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
+    "@VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
 
 # interactive 'hello' string to identify us to the user
 $@PROGNAME@_Hello = 
-    "This is @PROGNAME@ Version @VERSION@.@REVISION@.@PATCHLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
+    "This is @PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
 
 # a GNU --version output
 $@PROGNAME@_GNUVersion =
-    "@PROGNAME@ Version @VERSION@.@REVISION@.@PATCHLEVEL@";
+    "@PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@";
 
 # a UNIX what(1) id string
 $@PROGNAME@_WhatID =
-    "@(#)@PROGNAME@ Version @VERSION@.@REVISION@.@PATCHLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
+    "@(#)@PROGNAME@ Version @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ (@DAY@-@MONTH@-@YEAR@)";
 
 # a RCS ident(1) id string
 $@PROGNAME@_RCSIdentID =
-    "\$Id: @PROGNAME@ @VERSION@.@REVISION@.@PATCHLEVEL@ @DAY@-@MONTH@-@YEAR@ \$";
+    "\$Id: @PROGNAME@ @VERSION@.@REVISION@@BPTYPE@@BPLEVEL@ @DAY@-@MONTH@-@YEAR@ \$";
 
 # a WWW id string
 $@PROGNAME@_WebID =
-    "@PROGNAME@/@VERSION@.@REVISION@.@PATCHLEVEL@";
+    "@PROGNAME@/@VERSION@.@REVISION@@BPTYPE@@BPLEVEL@";
+
+# a plain id string
+$@PROGNAME@_PlainID =
+    "@VERSION@.@REVISION@@BPTYPE@@BPLEVEL@";
+
 1;
 EOF
         ;;
@@ -211,14 +297,18 @@ EOF
 esac
 
 rm -f $VERSIONFILE
+
+#   now create the version file
 sed \
 -e "s|@PROGNAME@|$PROGNAME|g" \
 -e "s|@VERSION@|$version|g" \
 -e "s|@REVISION@|$revision|g" \
--e "s|@PATCHLEVEL@|$patchlevel|g" \
+-e "s|@BPTYPE@|$bptype|g" \
+-e "s|@BPLEVEL@|$bplevel|g" \
 -e "s|@YEAR@|$year|g" \
 -e "s|@MONTH@|$month|g" \
 -e "s|@DAY@|$day|g" <$tmpfile >$VERSIONFILE
 rm -f $tmpfile
+
 
 ##EOF##

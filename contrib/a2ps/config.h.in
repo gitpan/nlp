@@ -1,0 +1,138 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/*
+ *	This section is related to site depend configuration
+ */
+
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+/* Define if you can safely include both <sys/time.h> and <time.h>.  */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if your <sys/time.h> declares struct tm.  */
+#undef TM_IN_SYS_TIME
+
+/* Define if you have the ftime function.  */
+#undef HAVE_FTIME
+
+/* Define if you have the gethostname function.  */
+#undef HAVE_GETHOSTNAME
+
+/* Define if you have the gettimeofday function.  */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define if you have the uname function.  */
+#undef HAVE_UNAME
+
+/* Define if you have the <sys/time.h> header file.  */
+#undef HAVE_SYS_TIME_H
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
+/* Define if you have the nsl library (-lnsl).  */
+#undef HAVE_LIBNSL
+
+/* Define if the lp service is OK.  */
+#undef HAVE_LP
+
+/* Define if the lpr service is OK. */
+#undef HAVE_LPR
+
+/* Define to the way file should be called to follow the links */
+#undef FILE_COMMAND
+
+
+/*
+ *	This section is related to default bahavior of a2ps
+ */
+
+/* Here is defined the version of a2ps */
+#undef VERSION
+
+/* Now are the various alternative for the installation */
+/* Define to 1 if A4 is the default paper */
+/* Define to 0 if USletter is the default paper */
+#undef A4_DFLT
+
+/* Defined to 1 if ISOlatin1 should be accepted by default */
+#undef ISOLATIN1_DFLT
+
+/* Define to 1 if output should be sent to printer by default */
+#undef LPR_PRINT_DFLT
+
+/* Define to 1 if style sheet should be guessed by default */
+/* Define to 0 if plain style should be used by default */
+#undef AUTO_DFLT
+
+/* Define the option to give to lp(r) to get single-sided prints */
+#undef ONESIDED
+
+/* Define the option to give to lp(r) to get double-sided prints */
+#undef TWOSIDED
+
+/* Define to 1 if printing should be recto-verso by default */
+#undef TWOSIDED_DFLT
+
+/*
+ * This section is related to the defines you might want to change
+ * This section is not related to configure
+ */
+
+/*
+ * Default page dimensions
+ */
+
+/* MARGIN: Total lateral (left+right) or vertical (top+bottom)
+ * margins. It must be a real constant, specifying inches. */
+
+#if A4_DFLT		/* use a4 paper */
+#  define WIDTH		8.27
+#  define HEIGHT	11.64
+#  define ALT_WIDTH	8.5
+#  define ALT_HEIGHT	11.0
+#  define MARGIN	1.4
+#else			/* use US letter */
+#  define WIDTH		8.5
+#  define HEIGHT	11.0
+#  define ALT_WIDTH	8.27
+#  define ALT_HEIGHT	11.64
+#  define MARGIN	1.4
+#endif
+
+/*
+ * Pathname separator for file system
+ */
+#ifndef DIR_SEP
+#  define DIR_SEP	'/'
+#endif
+
+
+/*
+ * Printing parameters
+ */
+
+#if HAVE_LP
+#  define LPR_COMMAND	"lp"
+#  define LPR_OPT	""
+#  define LPR_DEST_OPT	"-d"	/* Option to specify the destination */
+#  define LPR_PRINT
+#elif HAVE_LPR
+#  define LPR_COMMAND	"lpr"
+#  define LPR_OPT	"-l"
+#  define LPR_DEST_OPT	"-P"	/* Option to specify the destination */
+#  define LPR_PRINT
+#endif
+
+#ifdef LPR_PRINT
+#  if defined(TWOSIDED)
+#    define RECTO_VERSO_PRINTING
+#  endif
+#endif LPR_PRINT
+    
+
+

@@ -1,0 +1,171 @@
+.\" @(#)prescript.man.4 1.0 04/10/1996
+.\"
+.TH PRESCRIPT 4 "1 October 1996"
+.UC 4
+.SH NAME
+prescript \- LaTeX-like language for Postscript generation
+.PP
+.SH DESCRIPTION
+\fIprescript\fP has been designed in conjunction with \fIa2ps\fP.
+\fIa2ps\fP is an ASCII to PostScript converter with the ability
+to pretty print sources for different languages. Hence, bold
+sequences, special characters etc. were implemented in \fIa2ps\fP. To
+allow the direct access to those features, \fIprescript\fP became an
+input language for \fIa2ps\fP, were special font treatments are
+specified in a LaTeX-like syntax.
+.PP
+The main advantages for using \fIprescript\fP are: it is very simple,
+it is LaTeX compatible (that is, correctly written \fIprescript\fP
+files do compile with LaTeX); \fIa2ps\fP is small and easy to install,
+hence it is available on every UNIX platform. It can be a good
+candidate for generation of postscript output (syntactical
+pretty-printers, generation of various reports etc.).
+.PP
+.SH SYNTAX
+Every command name begins by a backslash (\\). If the command uses an
+argument, it is given between curly braces with no spaces between the
+command name and the argument.
+
+The main limit on \fIprescript\fP is that no command can be used
+inside another command. For instance, though it is perfectly legal in
+LaTeX, the following line will be badly interpreted by \fIa2ps\fP:
+
+.ti +0.5i
+\\textbf{Problems using \\textit{prescript} instead of \\LaTeX}
+
+The correct way to write this in \fIprescript\fP is
+
+.ti +0.5i
+\\textbf{Problems using} \\textbi{prescript} \\textbf{instead of} \\LaTeX.
+
+Everything from an unquoted % to the end of line is ignored
+(comments).
+.PP
+.SS Structure commands
+.TP 0.6i
+.B \esection{\fITitle\fP}, \esubsection{\fITitle\fP}, \esubsubsection{\fITitle\fP}.
+Used to specify the title of a section, subsection or subsubsection. 
+.TP 0.6i
+.B \etextbf{\fItext\fP}, \etextit{\fItext\fP}, \etextbi{\fItext\fP}, \etextrm{\fItext\fP}
+\fItext\fP is written in bold, italic, bold-italic, and in times.
+.TP 0.6i
+.B \etextsy{\fItext\fP}
+\fItext\fP is written in the Postscript symbol font. This feature is not
+compatible with LaTeX. It is recommended, when possible, to use the
+special keywords denoting symbols, which are compatible with LaTeX.
+.SS Special symbols
+There is a big menagerie of symbols. To get its list, it is suggested
+to print \fIa2ps\fP's report about \fIprescript\fP using the command
+line:
+
+.ti +0.5i
+a2ps -Wprescript | a2ps -kprescript
+
+The reader should be aware that LaTeX is more exigent about the
+special symbols. Most of them must be in so-called math mode, which
+means that the command must be inside $ signs. For instance, though
+.ti +0.5i
+If \\forall x \\in E, x \\in F then E \\subseteq F.
+.br
+is perfectly legal in \fIprescript\fP, it should be written
+.ti +0.5i
+If $\\forall x \\in E, x \\in F$ then $E \\subseteq F$.
+.br
+for LaTeX. Since in \fIprescript\fP every $ is discarded (unless
+quoted by a \\), the second form is also admitted.
+.SS Special characters
+$ is ignored in \fIprescript\fP for compatibility with LaTeX, and %
+introduces a comment. Hence they are the only symbol which have to be
+quoted by a \\. The following characters should also be quoted to
+produce good LaTeX files, but are accepted by \fIprescript\fP: _, &,
+#.  Note that \fIinside a command\fP, like \\textbf, the quotation
+mechanism does not work in \fIprescript\fP (\\texrm{#$%} writes #$%)
+though LaTeX still requires quotation. Hence whenever special
+characters or symbols are introduced, they should be at the outer most
+level.
+.SS Quotation
+There is a general mechanism to avoid special sequences from being
+interpreted: the commands \\verb+\fIquoted string\fP+, where + can be
+any symbol in +, !, |, #, =.
+.PP
+.SH DIFFERENCES WITH LaTeX
+.SS LaTeX commands ignored in prescript
+Some LaTeX commands have no equivalent in \fIprescript\fP, but are
+simply skipped at compilation time (if immediately followed by an
+end-of-line):
+.RS
+.PP
+\fB \\begin{document} \\end{document} \\begin{itemize} \\end{itemize}
+\\begin{enumerate} \\end{enumerate} \\begin{description}
+\\end{description}\fP
+.RE
+.PP
+Everything between 
+.ti +0.5i
+%%prescript:skip
+.br
+and
+.ti +0.5i
+%%prescript:piks
+.br
+will be ignored in \fIprescript\fP, so that there can lay command
+definitions for LaTeX exclusively.
+.SS Commands available in prescript but not in LaTeX
+The commands \\textbi (for bold-italic) and \\textsy (for symbol) do
+not exist in LaTeX.  They should be defined in the preamble:
+.br
+%%prescript:skip 
+.br
+\\newcommand{\\textbi}[1]{\\textbf{\\it #1}}
+.br
+\\newcommand{\\textsy}[1]{#1}
+.br
+%%prescript:piks
+
+There is no way in \fIprescript\fP to get an automatic
+numbering. There are no equivalent to the LaTeX environment
+\fIenumerate\fP. But every command beginning by \\text is doubled by a
+command beginning by \\magic. \fIa2ps\fP behave the same way on both
+families of command. Hence, if one specifies that arguments of that
+functions should be ignored in the preamble of the LaTeX document, the
+numbering is emulated. For instance
+.br
+\\begin{enumerate}
+.br
+\\magicbf{1.}\item First line
+.br
+\\magicbf{2.}\item Second line
+.br
+\\end{enumerate}
+.br
+will be treated the same way both in \fIprescript\fP and LaTeX.
+
+Some symbols are available in \fIprescript\fP but not in LaTeX:
+.RS
+.PP
+\fB\\alex \\Alpha \\apple \\Beta \\carriagereturn \\Chi \\Epsilon
+\\Eta \\florin \\Iota \\Kappa \\Mu \\Nu \\Omicron \\omicron \\radic
+\\register \\Rho \\suchthat \\Tau \\therefore \\trademark \\varUpsilon
+\\Zeta\fP
+.RE
+.PP
+A good example of a LaTeX preamble to get LaTeX compile
+\fIprescript\fP files is given by the report of \fIa2ps\fP.
+.PP
+.SH EXAMPLES
+\fIprescript\fP and \fIa2ps\fP can be used for one-the-fly
+formating. For instance, on the passwd file:
+
+.ti +0.5i
+ypcat passwd |
+.ti +0.7i
+awk -F: '{print "\\textbf{" $5 "} (" $1 ") \\rightarrow\\textit{" $7 "}"}' |
+.ti +0.7i
+a2ps -kpre -t -P
+.PP
+.SH SEE ALSO
+me(7), ms(7), tex(1), latex(1), a2ps(1), troff(1), nroff(1).
+.PP
+.SH AUTHOR
+Akim Demaille (demaille@inf.enst.fr).
+

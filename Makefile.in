@@ -14,14 +14,12 @@ prefix          = @prefix@
 exec_prefix     = @exec_prefix@
 bindir          = @bindir@
 libdir          = @libdir@
+libsubdir       = @libsubdir@
 man1dir         = @man1dir@
 man1ext         = @man1ext@
 tmpdir          = @tmpdir@
 
 # ---
-
-includedir=$(libdir)/include
-sampledir=$(libdir)/example
 
 _GETDISTINFO = \
 	_version=`$(top_srcdir)/etc/newvers -lperl -d src/libVers.pl`; \
@@ -42,22 +40,26 @@ _BUILDDIST = \
 all:
 	cd src; $(MAKE)
 
-dist: distclean
+release: distclean
 	@$(_GETDISTINFO) \
 	_distname="nlp-$${_version}"; \
-	_tarball="../web/distrib/$${_distname}.tar.gz"; \
+	_tarball="$${_distname}.tar.gz"; \
 	echo "Release Distribution: NLP Version $$_version"; \
 	$(_BUILDDIST)
 
-snap: distclean
-	@$(_GETDISTINFO) \
-	_distname="nlp-$${_version}-$${_date}-SNAP"; \
-	_tarball="../web/distrib/$${_distname}.tar.gz"; \
-	echo "Snap of whole source tree: NLP Version $$_version as of $$_date"; \
-	$(_BUILDDIST)
-
 install:
-	cd src; $(MAKE) install
+	$(top_srcdir)/etc/mkinstalldirs $(bindir)
+	$(top_srcdir)/etc/mkinstalldirs $(man1dir)
+	$(top_srcdir)/etc/mkinstalldirs $(libdir)$(libsubdir)
+	$(top_srcdir)/etc/mkinstalldirs $(libdir)$(libsubdir)/prologue
+	$(INSTALL_PROGRAM) src/nlp $(bindir)/nlp
+	$(INSTALL_DATA) src/nlp.man.nroff $(man1dir)/nlp.1
+	$(INSTALL_DATA) src/prologue/ps.duplex.on       $(libdir)$(libsubdir)/prologue/ps.duplex.on
+	$(INSTALL_DATA) src/prologue/ps.duplex.off      $(libdir)$(libsubdir)/prologue/ps.duplex.off
+	$(INSTALL_DATA) src/prologue/ps.papertray.upper $(libdir)$(libsubdir)/prologue/ps.papertray.upper
+	$(INSTALL_DATA) src/prologue/ps.papertray.lower $(libdir)$(libsubdir)/prologue/ps.papertray.lower
+	$(INSTALL_DATA) src/prologue/ps.manualfeed.on   $(libdir)$(libsubdir)/prologue/ps.manualfeed.on
+	$(INSTALL_DATA) src/prologue/ps.manualfeed.off  $(libdir)$(libsubdir)/prologue/ps.manualfeed.off
 
 clean:
 	cd src; $(MAKE) clean

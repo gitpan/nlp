@@ -1,15 +1,14 @@
 #!/sw/bin/perl
-#
-#   unrequire -- recursive filter to substitute each Perl
-#                'require' command with the contents of the file
-#   Copyright (c) Ralf S. Engelschall, <rse@en.muc.de>
-#
-#   Usage: unrequire file.pl >file
-#
-
+##
+##   unrequire -- recursive filter to substitute each Perl
+##                'require' command with the contents of the file
+##   Copyright (c) Ralf S. Engelschall, <rse@en.muc.de>
+##
+##   Usage: unrequire file.pl >file
+##
 
 sub ProcessFile {
-    local ($file) = @_[0];
+    my ($file) = @_;
 
     open($file, "<$file");
     while(<$file>) {
@@ -18,7 +17,7 @@ sub ProcessFile {
             print $1;
             &ProcessFile($2);
             print $3;
-            break;
+            next;
         }
         #   remove a require result code
         if (m|^1;$|) {
@@ -31,3 +30,4 @@ sub ProcessFile {
 
 &ProcessFile($ARGV[0]);
 
+##EOF##
