@@ -6,6 +6,7 @@ $PRG_PSSELECT  = "@path_psselect@";
 $PRG_PSBOOK    = "@path_psbook@";
 $PRG_PSTOPS    = "@path_pstops@";
 $PRG_DVIPS     = "@path_dvips@";
+$PRG_PDFTOPS   = "@path_pdftops@";
 $PRG_GHOSTVIEW = "@path_ghostview@";
 
 1;

@@ -5,7 +5,7 @@
 #undef USE_BSD_LPR
 #undef HAVE_DVIPS
 #undef HAVE_GHOSTVIEW
-
+#undef HAVE_PDFTOPS
 
 @BOTTOM@
 

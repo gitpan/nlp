@@ -1328,12 +1328,55 @@ if test "$path_dvips" != "dvips_not_found"; then
 EOF
 
 fi
-for ac_prog in gv ghostview
+for ac_prog in pdftops
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 echo "configure:1337: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_path_pdftops'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$path_pdftops" in
+  /*)
+  ac_cv_path_path_pdftops="$path_pdftops" # Let the user override the test with a path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
+  for ac_dir in $PATH; do
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_path_pdftops="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+path_pdftops="$ac_cv_path_path_pdftops"
+if test -n "$path_pdftops"; then
+  echo "$ac_t""$path_pdftops" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+test -n "$path_pdftops" && break
+done
+test -n "$path_pdftops" || path_pdftops="pdftops_not_found"
+
+if test "$path_pdftops" != "pdftops_not_found"; then
+    cat >> confdefs.h <<\EOF
+#define HAVE_PDFTOPS 1
+EOF
+
+fi
+for ac_prog in gv ghostview
+do
+# Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1380: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_path_ghostview'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1383,7 +1426,7 @@ fi
 # SVR4 /usr/ucb/install, which tries to use the nonexistent group "staff"
 # ./install, which can be erroneously created by make from ./install.sh.
 echo $ac_n "checking for a BSD compatible install""... $ac_c" 1>&6
-echo "configure:1387: checking for a BSD compatible install" >&5
+echo "configure:1430: checking for a BSD compatible install" >&5
 if test -z "$INSTALL"; then
 if eval "test \"`echo '$''{'ac_cv_path_install'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -1636,6 +1679,7 @@ s%@path_psbook@%$path_psbook%g
 s%@path_pstops@%$path_pstops%g
 s%@path_perl@%$path_perl%g
 s%@path_dvips@%$path_dvips%g
+s%@path_pdftops@%$path_pdftops%g
 s%@path_ghostview@%$path_ghostview%g
 s%@INSTALL_PROGRAM@%$INSTALL_PROGRAM%g
 s%@INSTALL_DATA@%$INSTALL_DATA%g

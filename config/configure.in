@@ -109,6 +109,10 @@ AC_PROGRAMS_PATH(path_dvips, dvips, dvips_not_found,)
 if test "$path_dvips" != "dvips_not_found"; then
     AC_DEFINE(HAVE_DVIPS)
 fi
+AC_PROGRAMS_PATH(path_pdftops, pdftops, pdftops_not_found,)
+if test "$path_pdftops" != "pdftops_not_found"; then
+    AC_DEFINE(HAVE_PDFTOPS)
+fi
 AC_PROGRAMS_PATH(path_ghostview, gv ghostview, ghostview_not_found,)
 if test "$path_ghostview" != "ghostview_not_found"; then
     AC_DEFINE(HAVE_GHOSTVIEW)

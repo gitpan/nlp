@@ -90,6 +90,9 @@ sub printFile {
     elsif ($filetype eq 'DVI') {
         @output = printDVI(*option, $file);
     }
+    elsif ($filetype eq 'PDF') {
+        @output = printPDF(*option, $file);
+    }
     elsif ($filetype eq 'Postscript') {
         @output = printPostscript(*option, $file, 'original');
     }
@@ -152,6 +155,7 @@ sub printASCII {
 
 sub printDVI {
     local(*option, $file) = @_;
+	local($tmpfile, $tmpfile2, $dvipsopt, $start);
 
     &Util::Dbg("filter: DVI");
 
@@ -176,6 +180,22 @@ sub printDVI {
     &printPostscript(*option, $tmpfile2, 'temporary');
 
     unlink($tmpfile2) if (-f $tmpfile2);
+}
+
+sub printPDF {
+    local(*option, $file) = @_;
+	local($tmpfile, $pdftopsopt);
+
+    &Util::Dbg("filter: PDF");
+
+    $pdftopsopt = "";
+
+    $tmpfile = &File::Tmpfile();
+    &Util::System("$Config::PRG_PDFTOPS $pdftopsopt $file $tmpfile 2>/dev/null");
+
+    &printPostscript(*option, $tmpfile, 'temporary');
+
+    unlink($tmpfile) if (-f $tmpfile);
 }
 
 sub printPostscript {

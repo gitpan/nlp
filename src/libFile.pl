@@ -65,10 +65,13 @@ sub FileType {
     if (unpack("h4", $buffer) eq '7f20') {
         $type = 'DVI';
     }
-    if (unpack("a2", $buffer) eq '%!') {
+    elsif (unpack("a4", $buffer) eq '%PDF') {
+        $type = 'PDF';
+    }
+    elsif (unpack("a2", $buffer) eq '%!') {
         $type = 'Postscript';
     }
-    if ($type eq 'unknown') {
+    elsif ($type eq 'unknown') {
         seek(FP, 0, 0);
         $isascii = 1;
         while (($n = read(FP, $buffer, 16384)) > 0) {

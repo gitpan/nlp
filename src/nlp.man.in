@@ -35,7 +35,8 @@ program is a frontend to the standard printing commands
 if filename is "-") in
 .IR ASCII ,
 .IR ISO-Latin-1 ,
-.I DVI
+.IR DVI ,
+.I PDF
 or still
 .I Postscript
 format, before sending out to the Postscript printers via these
